@@ -14,9 +14,6 @@ show ip route displays the current state of the routing table, showing all route
 So in simple terms, the commands are setting up routes on router R1 so that it knows how to reach the 172.16.1.0, 192.168.1.0, and 192.168.2.0 networks. For any traffic that needs to go to these networks, the router will forward it to the next-hop IP address 172.16.2.2. By using the show ip route | begin Gateway command, you can check the routing table to confirm the routes have been added.
 
 
-
-
-
 For IPv6 Static Routes, the rules remain the same but there are some key differences. The key differences is that we are using IPv6 addresses instead of IPv4, also before defining the routes, we use ipv6 unicast-routing to preface that we are using IPv6 and when verifying our routes, the show ipv6 route command is used. 
 
 R1(config)# ipv6 unicast-routing
