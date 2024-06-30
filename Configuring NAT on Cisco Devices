@@ -1,0 +1,100 @@
+Configure Static NAT
+
+R2(config)# ip nat inside source static 192.168.10.254 209.165.201.5
+R2(config)# interface serial 0/1/0
+R2(config-if)# ip address 192.168.1.2 255.255.255.252
+R2(config-if)# ip nat inside
+R2(config-if)# exit
+R2(config)# interface serial 0/1/1
+R2(config-if)# ip address 209.165.200.1 255.255.255.252
+R2(config-if)# ip nat outside
+R2# show ip nat translations
+R2# show ip nat statistics
+
+Explanation:
+- ip nat inside source static 192.168.10.254 209.165.201.5: Creates a static NAT entry, mapping the inside local IP address 192.168.10.254 to the inside global IP address 209.165.201.5.
+- interface serial 0/1/0: Enter interface configuration mode for the serial 0/1/0 interface.
+- ip address 192.168.1.2 255.255.255.252: Assign an IP address to the interface serial 0/1/0.
+- ip nat inside: Configure this interface as the inside interface for NAT.
+- exit: Exit interface configuration mode.
+- interface serial 0/1/1: Enter interface configuration mode for the serial 0/1/1 interface.
+- ip address 209.165.200.1 255.255.255.252: Assign an IP address to the interface serial 0/1/1.
+- ip nat outside: Configure this interface as the outside interface for NAT.
+- show ip nat translations: Display the NAT translation table.
+- show ip nat statistics: Display NAT statistics.
+
+Configure Dynamic NAT
+
+R2(config)# ip nat pool NAT-POOL1 209.165.200.226 209.165.200.240 netmask 255.255.255.224
+R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
+R2(config)# ip nat inside source list 1 pool NAT-POOL1
+R2(config)# interface serial 0/1/0
+R2(config-if)# ip nat inside
+R2(config)# interface serial 0/1/1
+R2(config-if)# ip nat outside
+R2# show ip nat translations
+R2# show ip nat translation verbose
+
+Explanation:
+- ip nat pool NAT-POOL1 209.165.200.226 209.165.200.240 netmask 255.255.255.224: Create a NAT pool named NAT-POOL1 with a range of IP addresses from 209.165.200.226 to 209.165.200.240.
+- access-list 1 permit 192.168.0.0 0.0.255.255: Create an access list that permits the 192.168.0.0/16 network.
+- ip nat inside source list 1 pool NAT-POOL1: Configure dynamic NAT using the access list 1 and the NAT pool NAT-POOL1.
+- interface serial 0/1/0: Enter interface configuration mode for the serial 0/1/0 interface.
+- ip nat inside: Configure this interface as the inside interface for NAT.
+- interface serial 0/1/1: Enter interface configuration mode for the serial 0/1/1 interface.
+- ip nat outside: Configure this interface as the outside interface for NAT.
+- show ip nat translations: Display the NAT translation table.
+- show ip nat translation verbose: Display detailed information about NAT translations.
+
+Clear Dynamic NAT Entries
+
+R2# clear ip nat translation *
+R2# show ip nat translation
+
+
+Explanation:
+- clear ip nat translation *: Clear all dynamic NAT translations.
+- show ip nat translation: Verify that the translations have been cleared.
+
+Configure PAT to Use a Single IPv4 Address
+
+R2(config)# ip nat inside source list 1 interface serial 0/1/1 overload
+R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
+R2(config)# interface serial0/1/0
+R2(config-if)# ip nat inside
+R2(config-if)# exit
+R2(config)# interface Serial0/1/1
+R2(config-if)# ip nat outside
+
+Explanation:
+- ip nat inside source list 1 interface serial 0/1/1 overload: Configure PAT to translate multiple inside local addresses to a single IP address assigned to serial 0/1/1, allowing multiple devices to share one external IP address.
+- access-list 1 permit 192.168.0.0 0.0.255.255: Create an access list that permits the 192.168.0.0/16 network.
+- interface serial0/1/0: Enter interface configuration mode for the serial 0/1/0 interface.
+- ip nat inside: Configure this interface as the inside interface for NAT.
+- interface Serial0/1/1: Enter interface configuration mode for the serial 0/1/1 interface.
+- ip nat outside: Configure this interface as the outside interface for NAT.
+
+Configure PAT to Use an Address Pool
+
+R2(config)# ip nat pool NAT-POOL2 209.165.200.226 209.165.200.240 netmask 255.255.255.224
+R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
+R2(config)# ip nat inside source list 1 pool NAT-POOL2 overload
+R2(config)# interface serial0/1/0
+R2(config-if)# ip nat inside
+R2(config-if)# exit
+R2(config)# interface serial0/1/1
+R2(config-if)# ip nat outside
+R2(config-if)# end
+R2# show ip nat translations
+R2# show ip nat statistics
+
+Explanation:
+- ip nat pool NAT-POOL2 209.165.200.226 209.165.200.240 netmask 255.255.255.224: Create a NAT pool named NAT-POOL2 with a range of IP addresses from 209.165.200.226 to 209.165.200.240.
+- access-list 1 permit 192.168.0.0 0.0.255.255: Create an access list that permits the 192.168.0.0/16 network.
+- ip nat inside source list 1 pool NAT-POOL2 overload: Configure PAT using the access list 1 and the NAT pool NAT-POOL2, allowing multiple inside local addresses to be translated to multiple inside global addresses.
+- interface serial0/1/0: Enter interface configuration mode for the serial 0/1/0 interface.
+- ip nat inside: Configure this interface as the inside interface for NAT.
+- interface serial0/1/1: Enter interface configuration mode for the serial 0/1/1 interface.
+- ip nat outside: Configure this interface as the outside interface for NAT.
+- show ip nat translations: Display the NAT translation table.
+- show ip nat statistics: Display NAT statistics.
