@@ -1,0 +1,133 @@
+A static route is a route that is manually set by a network professional. Static routes have their advantages and disadvantages though. When you want to make sure traffic goes in a specific direction, static routes are used. The problem comes in when you are scaling a network, static routes are hard to manage when a network grows, and quite frankly, unefficient. Now there are floating routes that provide a backup route if the primary static route is out of commision, but this too can get messy. There are 2 types of static route configurations, one for IPv4 and one for IPv6.
+
+To configure IPv4 Static Routes, enter this into the Cisco router IOS:
+
+R1(config)# ip route 172.16.1.0 255.255.255.0 172.16.2.2
+R1(config)# ip route 192.168.1.0 255.255.255.0 172.16.2.2
+R1(config)# ip route 192.168.2.0 255.255.255.0 172.16.2.2
+R1# show ip route | begin Gateway
+
+First, make sure you are working on the correct router that you want to configure, this is represented as R1. Next make sure you are in global config mode, to do this enter "en" at the first prompt, putting you in privileged exec mode, then enter "conf t" to enter global config mode. ip route is the command used to configure routes on Cisco devices. 172.16.1.0 is the destination network, meaning any traffic meant for this network should follow this route. 255.255.255.0 is the subnet mask, defining the network portion of the IP address, it also stands for /24 notation but we cannot use notation when configuring IPv4 routes. 172.16.2.2 is the next-hop IP address, meaning traffic destined for the 172.16.1.0 network should be forwarded to this IP address. The second and third routes follows the same tune.
+
+show ip route displays the current state of the routing table, showing all routes the router knows about. The | begin Gateway is a filter that starts the display output at the line containing the word "Gateway." It's useful for quickly finding the relevant section of the output.
+
+So in simple terms, the commands are setting up routes on router R1 so that it knows how to reach the 172.16.1.0, 192.168.1.0, and 192.168.2.0 networks. For any traffic that needs to go to these networks, the router will forward it to the next-hop IP address 172.16.2.2. By using the show ip route | begin Gateway command, you can check the routing table to confirm the routes have been added.
+
+
+
+
+
+For IPv6 Static Routes, the rules remain the same but there are some key differences. The key differences is that we are using IPv6 addresses instead of IPv4, also before defining the routes, we use ipv6 unicast-routing to preface that we are using IPv6 and when verifying our routes, the show ipv6 route command is used. 
+
+R1(config)# ipv6 unicast-routing
+R1(config)# ipv6 route 2001:db8:acad:1::/64 2001:db8:acad:2::2
+R1(config)# ipv6 route 2001:db8:cafe:1::/64 2001:db8:acad:2::2
+R1(config)# ipv6 route 2001:db8:cafe:2::/64 2001:db8:acad:2::2
+R1# show ipv6 route
+
+The ipv6 unicast-routing command enables IPv6 unicast routing on the router, without it the router won't be able to forward IPv6 packets. ipv6 route: This command tells the router you're adding a new IPv6 static route. 2001:db8:acad:1::/64 is the destination network in IPv6 format. The /64 represents the prefix length, another way of saying the size of the network. 2001:db8:acad:2::2 is the next-hop IPv6 address, meaning traffic destined for the 2001:db8:acad:1::/64 network should be forwarded to this IP address. The second and third routes follows suite. The show ipv6 route command displays the current state of the IPv6 routing table, showing all routes the router knows about.
+
+For any traffic that needs to go to the 2001:db8:acad:1::/64, 2001:db8:cafe:1::/64, and 2001:db8:cafe:2::/64 networks, the router will forward it to the next-hop IPv6 address 2001:db8:acad:2::2.
+
+I would like to go over a couple more routes that are commonly used in Cisco networking.
+
+1. IPv4 Default Static Route
+
+R1(config)# ip route 0.0.0.0 0.0.0.0 172.16.2.2
+
+Explanation:
+- ip route: This command defines a static route.
+- 0.0.0.0 0.0.0.0: This is a default route, meaning it will match any destination IP address.
+- 172.16.2.2: This is the next-hop IP address, meaning all traffic not matching more specific routes will be forwarded to this IP address.
+
+Verification:
+R1# show ip route static
+
+- show ip route static: This command displays all static routes in the router's routing table.
+
+2. IPv6 Default Static Route
+
+R1(config)# ipv6 route ::/0 2001:db8:acad:2::2
+
+Explanation:
+- ipv6 route: This command defines an IPv6 static route.
+- ::/0: This is a default route in IPv6, meaning it will match any destination IPv6 address.
+- 2001:db8:acad:2::2: This is the next-hop IPv6 address, meaning all traffic not matching more specific routes will be forwarded to this IP address.
+
+Verification:
+
+R1# show ipv6 route static
+
+- show ipv6 route static: This command displays all IPv6 static routes in the router's routing table.
+
+3. Configure IPv4 & IPv6 Floating Static Route
+
+IPv4 Floating Static Route:
+
+R1(config)# ip route 0.0.0.0 0.0.0.0 172.16.2.2
+R1(config)# ip route 0.0.0.0 0.0.0.0 10.10.10.2 5
+
+Explanation:
+- The first route is a default static route with the next-hop IP address 172.16.2.2.
+- The second route is a floating static route with the same destination (0.0.0.0 0.0.0.0) but a higher administrative distance (5). This route acts as a backup and will only be used if the primary route becomes unavailable.
+
+IPv6 Floating Static Route:
+
+R1(config)# ipv6 route ::/0 2001:db8:acad:2::2
+R1(config)# ipv6 route ::/0 2001:db8:feed:10::2 5
+
+Explanation:
+- The first route is a default IPv6 static route with the next-hop IPv6 address `2001:db8:acad:2::2`.
+- The second route is a floating IPv6 static route with the same destination (`::/0`) but a higher administrative distance (`5`). This route acts as a backup and will only be used if the primary route becomes unavailable.
+
+4. Configure Static Host Routes
+
+Branch(config)# ip route 209.165.200.238 255.255.255.255 198.51.100.2
+Branch(config)# ipv6 route 2001:db8:acad:2::238/128 2001:db8:acad:1::2
+Branch(config)# exit
+Branch#
+Branch# show ip route | begin Gateway
+Branch# show ipv6 route
+
+Explanation:
+- IPv4 Static Host Route:
+    - ip route 209.165.200.238 255.255.255.255 198.51.100.2
+        - 209.165.200.238 255.255.255.255: This specifies a static route to a single host (`209.165.200.238`).
+        - 198.51.100.2: This is the next-hop IP address.
+
+- IPv6 Static Host Route:
+    - ipv6 route 2001:db8:acad:2::238/128 2001:db8:acad:1::2
+        - 2001:db8:acad:2::238/128: This specifies a static route to a single IPv6 host.
+        - 2001:db8:acad:1::2: This is the next-hop IPv6 address.
+
+Verification:
+
+Branch# show ip route | begin Gateway
+Branch# show ipv6 route
+
+- show ip route | begin Gateway: This command displays the IPv4 routing table starting from the line containing "Gateway".
+- show ipv6 route: This command displays the IPv6 routing table.
+
+5. Configure IPv6 Static Host Route with Link-Local Next-Hop
+
+Branch(config)# no ipv6 route 2001:db8:acad:2::238/128 2001:db8:acad:1::2
+Branch(config)# ipv6 route 2001:db8:acad:2::238/128 serial 0/1/0 fe80::2
+Branch# show ipv6 route | begin ::
+Branch#
+
+Explanation:
+- Removing Existing Route:
+    - no ipv6 route 2001:db8:acad:2::238/128 2001:db8:acad:1::2
+        - This command removes the previously configured IPv6 static route.
+
+- Configuring Static Host Route with Link-Local Next-Hop:
+    - ipv6 route 2001:db8:acad:2::238/128 serial 0/1/0 fe80::2
+        - 2001:db8:acad:2::238/128: This specifies a static route to a single IPv6 host.
+        - serial 0/1/0: This specifies the outgoing interface.
+        - fe80::2: This is the link-local next-hop IPv6 address.
+
+Verification:
+
+Branch# show ipv6 route | begin ::
+
+- show ipv6 route | begin ::: This command displays the IPv6 routing table starting from the line containing "::", which helps in finding the specific static route.
