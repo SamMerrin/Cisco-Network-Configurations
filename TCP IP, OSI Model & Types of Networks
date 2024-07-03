@@ -2,6 +2,9 @@ TCP/IP
 
 TCP/IP is the foundational set of protocols used by every computer around the world. There is a lot of innovative people in the world and if every one of them created their own networking protocol, it would make it very hard to communicate with other people. So it was universally decided that TCP/IP is the standardized communication protocol that we all would use. TCP assembles the packets and IP makes sure it goes to the right destination.
 
+
+
+
 OSI Model
 
 The OSI Model is this: Please Do Not Throw Sausage Pizza Away! The first letter of each word stands for a layer in the OSI Model.
@@ -19,6 +22,9 @@ N - Network Layer
 D - Data Link Layer
 
 P - Physical Layer
+
+
+
 
 Different Types of Networks
 
