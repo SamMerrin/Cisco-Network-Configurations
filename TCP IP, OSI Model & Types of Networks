@@ -1,0 +1,31 @@
+TCP/IP 
+
+TCP/IP is the foundational set of protocols used by every computer around the world. There is a lot of innovative people in the world and if every one of them created their own networking protocol, it would make it very hard to communicate with other people. So it was universally decided that TCP/IP is the standardized communication protocol that we all would use. TCP assembles the packets and IP makes sure it goes to the right destination.
+
+OSI Model
+
+The OSI Model is this: Please Do Not Throw Sausage Pizza Away! The first letter of each word stands for a layer in the OSI Model.
+
+A - Application Layer
+
+P - Presentation Layer
+
+S - Session Layer
+
+T - Transport Layer
+
+N - Network Layer
+
+D - Data Link Layer
+
+P - Physical Layer
+
+Different Types of Networks
+
+LAN (Local Area Network): A network in a small area like a single building or campus.
+
+MAN (Metropolitan Area Network): Covers a larger area like a city or campus.
+
+WAN (Wide Area Network): Spans over a large area, like a country or globally.
+
+PAN (Personal Area Network): A small network around a person, like devices in one rooms.
