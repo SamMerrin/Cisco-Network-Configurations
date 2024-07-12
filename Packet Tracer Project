@@ -78,14 +78,14 @@ In this layer, I configured a DNS server on the Finance network (VLAN 10) to res
 
 Check My Work
 
-![PacketTracer File](https://github.com/oaotwinn/Cisco-Network-Configurations/blob/a6cbf29d00664bc964b6badfa7182d6af317c9bb/GitHub%20Project.pkt)
-
-To verify my configurations you can open up my attached file in Packet Tracer and run these tests,
+To verify my configurations you can open up my attached file (GitHub Project.pkt) in Packet Tracer and run these tests,
 
  Inter-VLAN Connectivity:
 Verify that PCs in VLAN 10 can ping PCs in VLAN 20.
+
 External Connectivity:
 Verify that internal PCs can ping the ISP router and external IP addresses.
+
 DHCP and DNS:
 Ensure PCs in VLAN 20 receive IP addresses from the DHCP server.
 Test DNS resolution from various PCs.
